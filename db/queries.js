@@ -57,3 +57,15 @@ getGrumpyArticles()
     .catch(err => {
     console.log(err)
 })
+
+const getSubTenComments = () => {
+    return db.query(`SELECT * from comments WHERE votes > 10`);
+}
+
+getSubTenComments()
+    .then(comments => {
+    console.log(comments)
+    })
+    .catch(err => {
+    console.log(err)
+})
