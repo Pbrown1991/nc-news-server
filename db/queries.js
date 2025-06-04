@@ -1,6 +1,6 @@
 const db = require('./connection')
 
-/*const getAllUsers = () => {
+const getAllUsers = () => {
     return db.query(`SELECT * from users;`).then(result => result.rows);
 }
 getAllUsers()
@@ -10,6 +10,8 @@ getAllUsers()
     .catch(err => {
         console.log(err);
     })
+
+
 
 const getTopicCoding = () => {
     return db.query(`SELECT * from articles WHERE topic = 'coding'`).then(result => result.rows);
@@ -23,6 +25,8 @@ getTopicCoding()
         console.log(err);
     })
 
+
+
 const commentsLessThanZero = () => {
     return db.query(`SELECT * from comments WHERE votes < 0`).then(result => result.rows);
 }    
@@ -35,6 +39,8 @@ commentsLessThanZero()
         console.log(err);
     })
 
+
+    
 const getAllTopics = () => {
     return db.query(`SELECT * from topics`).then(result => result.rows);
 }
@@ -44,7 +50,9 @@ getAllTopics()
     })
     .catch(err => {
     console.log(err)
-})*/
+})
+
+
 
 const getGrumpyArticles = () => {
     return db.query(`SELECT * from articles WHERE author ='grumpy19'`);
@@ -57,6 +65,8 @@ getGrumpyArticles()
     .catch(err => {
     console.log(err)
 })
+
+
 
 const getSubTenComments = () => {
     return db.query(`SELECT * from comments WHERE votes > 10`);
