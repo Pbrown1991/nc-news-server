@@ -1,6 +1,6 @@
 const db = require("../connection");
 const format = require('pg-format');
-const { convertTimestampToDate } = require("./utils");
+const { convertTimestampToDate, createLookUpObject} = require("./utils");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db.query(`DROP TABLE IF EXISTS comments;`)
@@ -63,13 +63,14 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       
       return db.query(insertArticleData)
     })
-    .then(() => {
+    .then((data) => {
+      const articleLookUp = createLookUpObject(data.rows, 'title', 'article_id')
       const dateFixedComments = commentData.map(convertTimestampToDate);
-      const insertCommentsData = format(`INSERT INTO comments (body, votes, author, created_at) VALUES %L RETURNING *;`,
-        dateFixedComments.map(({ body, votes, author, created_at }) => [body, votes, author, created_at])
+      const insertCommentsData = format(`INSERT INTO comments (article_id, body, votes, author, created_at) VALUES %L RETURNING *;`,
+        dateFixedComments.map(({article_title, body, votes, author, created_at })=> [articleLookUp[article_title], body, votes, author, created_at])
       );
       return db.query(insertCommentsData)
-  })
+    })
       }
     
   

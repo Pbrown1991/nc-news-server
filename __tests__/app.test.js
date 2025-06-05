@@ -62,3 +62,25 @@ describe('GET = /api/articles', () => {
     })
   })
 })
+
+describe('GET = /api/users', () => {
+  test('GET - 200 - responds with an object with the key of users and the value of an array of objects.', () => {
+    return request(app)
+    .get('/api/users')
+    .expect(200)
+    .then(({ body }) => {
+      const { users } = body
+      users.forEach((user) => {
+        expect(typeof user.username).toBe('string')
+        expect(typeof user.name).toBe('string')
+        expect(typeof user.avatar_url).toBe('string')
+      })
+  })
+  
+  })
+
+})
+
+describe('GET = /api/articles/:article_id', () => {
+  
+})

@@ -23,9 +23,15 @@ const fetchArticles = () => {
         ORDER BY articles.created_at DESC;
         `)
         .then(({ rows }) => {
-            console.log(rows)
         return rows
     })
 }
 
-module.exports = {fetchTopics, fetchArticles}
+const fetchUsers = () => {
+    return db.query(`SELECT * FROM users`)
+        .then(({ rows }) => {
+            return rows
+        })
+}
+
+module.exports = {fetchTopics, fetchArticles, fetchUsers}

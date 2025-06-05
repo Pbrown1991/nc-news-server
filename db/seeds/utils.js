@@ -5,5 +5,12 @@ exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   return { created_at: new Date(created_at), ...otherProperties };
 };
 
-
+exports.createLookUpObject =(rows, key, value) => {
+  let lookupObj = {};
+  const newArr = [...rows];
+  newArr.forEach((row) => {
+    return (lookupObj[row[key]] = row[value]);
+  });
+  return lookupObj;
+};
 

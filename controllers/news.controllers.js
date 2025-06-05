@@ -1,4 +1,4 @@
-const { fetchTopics, fetchArticles } = require('../models/news.models')
+const { fetchTopics, fetchArticles, fetchUsers } = require('../models/news.models')
 
 const getTopics = (request, response) => {
     fetchTopics()
@@ -14,4 +14,11 @@ const getArticles = (request, response) => {
     })
 }
 
-module.exports = {getTopics, getArticles}
+const getUsers = (request, response) => {
+    fetchUsers()
+        .then((users) => {
+        response.status(200).send({users})
+    })
+}
+
+module.exports = {getTopics, getArticles, getUsers}
