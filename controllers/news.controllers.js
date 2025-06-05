@@ -1,4 +1,4 @@
-const { fetchTopics, fetchArticles, fetchUsers } = require('../models/news.models')
+const { fetchTopics, fetchArticles, fetchUsers, fetchArticlesById } = require('../models/news.models')
 
 const getTopics = (request, response) => {
     fetchTopics()
@@ -21,4 +21,16 @@ const getUsers = (request, response) => {
     })
 }
 
-module.exports = {getTopics, getArticles, getUsers}
+const getArticlesById = (request, response,next) => {
+    const { article_id } = request.params;
+    fetchArticlesById(article_id)
+        .then((articles) => {
+            if (articles.length === 0) {
+                return next({ status: 404, msg: 'Article not found' });
+            }
+            response.status(200).send({ article: articles[0] })
+        })
+        .catch(next);
+}
+
+module.exports = {getTopics, getArticles, getUsers, getArticlesById}

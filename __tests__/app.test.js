@@ -82,5 +82,36 @@ describe('GET = /api/users', () => {
 })
 
 describe('GET = /api/articles/:article_id', () => {
-  
+  test('GET - 200 - responds with an object with the key of article and the value of an article object', () => {
+    return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then(({ body }) => {
+        const { author, title, article_id, body: article_body, topic, created_at, votes, article_img_url } = body.article // naming conflict - rename body
+        expect(typeof author).toBe('string')
+        expect(typeof title).toBe('string')
+        expect(typeof article_id).toBe('number')
+        expect(typeof article_body).toBe('string')
+        expect(typeof topic).toBe('string')
+        expect(typeof created_at).toBe('string')
+        expect(typeof votes).toBe('number')
+        expect(typeof article_img_url).toBe('string')
+    })
+  })
+  test('GET - 404 - Responds with error message for an article_id that is invalid', () => {
+    return request(app)
+      .get('/api/articles/505')
+      .expect(404)
+      .then(({ body }) => {
+      expect(body.msg).toBe('Article not found')
+    })
+  })
+  test('GET - 400 - Responds with error message for an article_id input that is invalid', () => {
+    return request(app)
+      .get('/api/articles/potato')
+      .expect(400)
+      .then(({ body }) => {
+      expect(body.msg).toBe('Invalid input')
+    })
+  })
 })
