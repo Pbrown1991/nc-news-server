@@ -3,7 +3,7 @@ const app = express();
 const db = require('./db/connection')
 const endpointsJson = require('./endpoints.json')
 app.use(express.json());
-const {getTopics, getArticles,getUsers, getArticlesById} = require('./controllers/news.controllers')
+const {getTopics, getArticles,getUsers, getArticlesById, getCommentsByArticleId} = require('./controllers/news.controllers')
 
 
 app.get('/api', (request, response) => {
@@ -18,7 +18,15 @@ app.get('/api/users', getUsers)
 
 app.get('/api/articles/:article_id', getArticlesById)
 
+app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 
+
+
+app.use((err, req, res, next) => {
+    if (err.code === "22P02") {
+        return res.status(400).send({msg: "Invalid input"})
+    } else next (err)
+})
 
 
 app.use((err, req, res, next) => {
@@ -27,11 +35,7 @@ app.use((err, req, res, next) => {
     } else next(err)
 })
 
-app.use((err, req, res, next) => {
-    if (err.code === "22P02") {
-        return res.status(400).send({msg: "Invalid input"})
-    } else next (err)
-})
+
 
 app.use((err, req, res, next) => {
     console.log(err);

@@ -32,6 +32,7 @@ describe("GET /api/topics", () => {
       .then(({ body }) => {
         //const topic = body.topics[0]
         const { topics } = body
+        expect(topics.length).not.toBe(0)
         topics.forEach((topic) => {
           expect(typeof topic.slug).toBe('string')
           expect(typeof topic.description).toBe('string')
@@ -47,7 +48,8 @@ describe('GET = /api/articles', () => {
       .get('/api/articles')
       .expect(200)
       .then(({ body }) => {
-        const { articles } = body
+        const { articles } = body        
+        expect(articles.length).not.toBe(0)
         articles.forEach((article) => {
           expect(typeof article.author).toBe('string')
           expect(typeof article.title).toBe('string')
@@ -70,6 +72,7 @@ describe('GET = /api/users', () => {
     .expect(200)
     .then(({ body }) => {
       const { users } = body
+      expect(users.length).not.toBe(0)
       users.forEach((user) => {
         expect(typeof user.username).toBe('string')
         expect(typeof user.name).toBe('string')
@@ -112,6 +115,27 @@ describe('GET = /api/articles/:article_id', () => {
       .expect(400)
       .then(({ body }) => {
       expect(body.msg).toBe('Invalid input')
+    })
+  })
+})
+
+describe('GET = /api/articles/:article_id/comments', () => {
+  test('GET - 200 - Responds with an object with the key of "comments" and the value of an array of comments for the given article_id', () => {
+    return request(app)
+      .get('/api/articles/1/comments')
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body
+        console.log(comments)
+        expect(comments.length).not.toBe(0)
+        comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe('number')
+          expect(typeof comment.votes).toBe('number')
+          expect(typeof comment.created_at).toBe('string')
+          expect(typeof comment.author).toBe('string')
+          expect(typeof comment.body).toBe('string')
+          expect(typeof comment.article_id).toBe('number')
+      })
     })
   })
 })

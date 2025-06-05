@@ -1,4 +1,4 @@
-const { fetchTopics, fetchArticles, fetchUsers, fetchArticlesById } = require('../models/news.models')
+const { fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId} = require('../models/news.models')
 
 const getTopics = (request, response) => {
     fetchTopics()
@@ -33,4 +33,16 @@ const getArticlesById = (request, response,next) => {
         .catch(next);
 }
 
-module.exports = {getTopics, getArticles, getUsers, getArticlesById}
+const getCommentsByArticleId = (request, response, next) => {
+    const { article_id } = request.params;
+    fetchCommentsByArticleId(article_id)
+        .then((comments) => {
+            if (comments.length === 0) {
+                return next({ status: 404, msg: 'Article not found' });
+            }
+            response.status(200).send({ comments: comments })
+        })
+        .catch(next);
+}
+
+module.exports = {getTopics, getArticles, getUsers, getArticlesById, getCommentsByArticleId}
