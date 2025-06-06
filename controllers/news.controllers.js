@@ -1,3 +1,4 @@
+const { ident } = require("pg-format");
 const {
   fetchTopics,
   fetchArticles,
@@ -5,7 +6,8 @@ const {
   fetchArticlesById,
   fetchCommentsByArticleId,
     postingCommentByArticleId,
-  patchingArticlesById
+    patchingArticlesById,
+  deletingCommentsByCommentId
 } = require("../models/news.models");
 const { checkUserExists, checkArticleExists } = require("../utils.js");
 
@@ -90,6 +92,19 @@ const patchArticlesByArticleId = (request, response, next) => {
         .catch(next);
 }
 
+const deleteCommentsByCommentId = (request, response, next) => {
+    const { comment_id } = request.params
+    const numId = Number(comment_id)
+    if (!Number.isInteger(numId)) {
+        return Promise.reject({status:400, msg:'Invalid comment ID'})
+    }
+    deletingCommentsByCommentId(comment_id)
+        .then(() => {
+            response.status(204).send();
+        })
+    .catch(next)
+}
+
 module.exports = {
   getTopics,
   getArticles,
@@ -97,5 +112,6 @@ module.exports = {
   getArticlesById,
   getCommentsByArticleId,
     postCommentByArticleId,
-  patchArticlesByArticleId
+    patchArticlesByArticleId,
+  deleteCommentsByCommentId
 };

@@ -271,3 +271,27 @@ describe('PATCH = /api/articles/:article_id', () => {
       })
   })
 })
+
+describe('DELETE = /api/comments/:comment_id', () => {
+  test('DELETE - 204 - Responds by deleting the comment at the chosen comment_id', () => {
+    return request(app)
+      .delete('/api/comments/17')
+      .expect(204)
+  })
+  test('DELETE - 404 - Responds with 404 when comment ID is not found', () => {
+    return request(app)
+      .delete('/api/comments/1000')
+      .expect(404)
+      .then(({ body }) => {
+      expect(body.msg).toBe('Comment ID 1000 not found')
+    })
+  })
+  test('DELETE - 400 - Responds with 400 when comment_id is not valid', () => {
+    return request(app)
+      .delete('/api/comments/potato')
+      .expect(400)
+      .then(({ body }) => {
+      expect(body.msg).toBe('Invalid comment ID')
+    })
+  })
+  })

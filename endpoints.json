@@ -78,5 +78,36 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Serves the posted comment object",
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "comment_id": 2,
+        "body": "Rise up! Gonna get higher and higher",
+        "votes": 0,
+        "author": "Ricketycricket",
+        "created_at": "2018-05-30T15:59:13.341Z"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Serves the specified article object with an updated votes property ",
+    "exampleResponse": {
+      "article": {
+        "author": "Sinbad",
+        "title": "Rob Thomas! Sing a song. Shut up!",
+        "article_id": 4,
+        "body": "You in Sinbad's house!",
+        "topic": "Rehab",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 5,
+        "article_img_url": "https://www.example.com/matchboxtwenty.img"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description:": "Deletes the specified comment and returns 204"
   }
 }

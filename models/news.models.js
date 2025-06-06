@@ -67,7 +67,17 @@ const patchingArticlesById = (article_id, inc_votes) => {
     })
 }
 
+const deletingCommentsByCommentId = (comment_id) => {
+    return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING*`, [comment_id])
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+            return Promise.reject({status:404, msg:`Comment ID ${comment_id} not found`})
+        }
+    })
+    
+}
 
 
 
-module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId,patchingArticlesById}
+
+module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId,patchingArticlesById,deletingCommentsByCommentId}
