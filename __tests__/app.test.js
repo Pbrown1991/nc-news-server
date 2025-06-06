@@ -99,9 +99,10 @@ describe('GET = /api/articles/:article_id', () => {
         expect(typeof created_at).toBe('string')
         expect(typeof votes).toBe('number')
         expect(typeof article_img_url).toBe('string')
+        expect(article_id).toBe(1)
     })
   })
-  test('GET - 404 - Responds with error message for an article_id that is invalid', () => {
+  test('GET - 404 - Responds with error message for an article_id that is not present', () => {
     return request(app)
       .get('/api/articles/505')
       .expect(404)
@@ -126,7 +127,6 @@ describe('GET = /api/articles/:article_id/comments', () => {
       .expect(200)
       .then(({ body }) => {
         const { comments } = body
-        console.log(comments)
         expect(comments.length).not.toBe(0)
         comments.forEach((comment) => {
           expect(typeof comment.comment_id).toBe('number')
@@ -135,7 +135,51 @@ describe('GET = /api/articles/:article_id/comments', () => {
           expect(typeof comment.author).toBe('string')
           expect(typeof comment.body).toBe('string')
           expect(typeof comment.article_id).toBe('number')
-      })
+          expect(comment.article_id).toBe(1)
+        })
+        for (let i = 0; i < comments.length - 1; i++) {
+          const current = new Date(comments[i].created_at);
+          const next = new Date(comments[i + 1].created_at);
+          expect(current>=next).toBe(true)
+    
+        }
     })
+  })
+  test('GET - 404 - Responds with error message for an article_id that is not present', () => {
+    return request(app)
+      .get('/api/articles/505/comments')
+      .expect(404)
+      .then(({ body }) => {
+      expect(body.msg).toBe('Article not found')
+    })
+  })
+  test('GET - 400 - Responds with correct error message for an article_id input that is invalid', () => {
+    return request(app)
+      .get('/api/articles/potato/comments')
+      .expect(400)
+      .then(({ body }) => {
+      expect(body.msg).toBe('Invalid input')
+    })
+  })
+})
+
+describe('POST = /api/articles/:article_id/comments', () => {
+  test('POST - 201 - Responds with the posted comment and has updated the comments table', () => {
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send({ username: 'Ricketycricket', body: 'Rise up! Gonna get higher and higher'})
+      .expect(201)
+      .then(({ body }) => {
+        const { article_id, comment_id, article_title, body: comment_body, votes, author, created_at } = body.comment
+        expect(typeof article_id).toBe('number')
+        expect(typeof comment_id).toBe('number')
+        expect(typeof comment_body).toBe('string')
+        expect(typeof votes).toBe('number')
+        expect(typeof author).toBe('string')
+        expect(typeof created_at).toBe('string')
+        expect(article_id).toBe(1)
+      
+    })
+    
   })
 })

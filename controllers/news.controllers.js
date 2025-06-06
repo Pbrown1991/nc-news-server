@@ -1,48 +1,74 @@
-const { fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId} = require('../models/news.models')
+const {
+  fetchTopics,
+  fetchArticles,
+  fetchUsers,
+  fetchArticlesById,
+  fetchCommentsByArticleId,
+  postingCommentByArticleId,
+} = require("../models/news.models");
+const { userExists } = require("../utils.js");
 
 const getTopics = (request, response) => {
-    fetchTopics()
-        .then((topics) => {
-        response.status(200).send({topics})
-    })
-}
+  fetchTopics().then((topics) => {
+    response.status(200).send({ topics });
+  });
+};
 
 const getArticles = (request, response) => {
-    fetchArticles()
-        .then((articles) => {
-        response.status(200).send({articles})
-    })
-}
+  fetchArticles().then((articles) => {
+    response.status(200).send({ articles });
+  });
+};
 
 const getUsers = (request, response) => {
-    fetchUsers()
-        .then((users) => {
-        response.status(200).send({users})
-    })
-}
+  fetchUsers().then((users) => {
+    response.status(200).send({ users });
+  });
+};
 
-const getArticlesById = (request, response,next) => {
-    const { article_id } = request.params;
-    fetchArticlesById(article_id)
-        .then((articles) => {
-            if (articles.length === 0) {
-                return next({ status: 404, msg: 'Article not found' });
-            }
-            response.status(200).send({ article: articles[0] })
-        })
-        .catch(next);
-}
+const getArticlesById = (request, response, next) => {
+  const { article_id } = request.params;
+  fetchArticlesById(article_id)
+    .then((articles) => {
+      if (articles.length === 0) {
+        return next({ status: 404, msg: "Article not found" });
+      }
+      response.status(200).send({ article: articles[0] });
+    })
+    .catch(next);
+};
 
 const getCommentsByArticleId = (request, response, next) => {
-    const { article_id } = request.params;
-    fetchCommentsByArticleId(article_id)
-        .then((comments) => {
-            if (comments.length === 0) {
-                return next({ status: 404, msg: 'Article not found' });
-            }
-            response.status(200).send({ comments: comments })
-        })
-        .catch(next);
-}
+  const { article_id } = request.params;
+  fetchCommentsByArticleId(article_id)
+    .then((comments) => {
+      if (comments.length === 0) {
+        return next({ status: 404, msg: "Article not found" });
+      }
+      response.status(200).send({ comments: comments });
+    })
+    .catch(next);
+};
 
-module.exports = {getTopics, getArticles, getUsers, getArticlesById, getCommentsByArticleId}
+const postCommentByArticleId = (request, response, next) => {
+  const { article_id } = request.params;
+  const { username, body } = request.body;
+  userExists(username)
+    .then(() => postingCommentByArticleId(article_id, username, body))
+    .then((comment) => {
+      if (comment.length === 0) {
+        return next({ status: 400, msg: "Comment not posted" });
+      }
+      response.status(201).send({ comment : comment[0] });
+    })
+    .catch(next);
+};
+
+module.exports = {
+  getTopics,
+  getArticles,
+  getUsers,
+  getArticlesById,
+  getCommentsByArticleId,
+  postCommentByArticleId,
+};

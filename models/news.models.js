@@ -46,6 +46,17 @@ const fetchCommentsByArticleId = (id) => {
         ORDER BY comments.created_at DESC;`, [id])
         .then(({ rows }) => {
         return rows
-    })
+    }) 
 }
-module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId}
+
+const postingCommentByArticleId = (article_id, username, body) => {
+   
+    return db.query(`INSERT INTO comments(article_id, author, body)
+        VALUES ($1, $2, $3) RETURNING *`, [article_id, username, body])
+        .then(({ rows }) => {
+            console.log(rows)
+        return rows
+    })
+    
+}
+module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId}
