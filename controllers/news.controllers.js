@@ -4,7 +4,8 @@ const {
   fetchUsers,
   fetchArticlesById,
   fetchCommentsByArticleId,
-  postingCommentByArticleId,
+    postingCommentByArticleId,
+  patchingArticlesById
 } = require("../models/news.models");
 const { checkUserExists, checkArticleExists } = require("../utils.js");
 
@@ -75,11 +76,26 @@ const postCommentByArticleId = (request, response, next) => {
     .catch(next);
 };
 
+const patchArticlesByArticleId = (request, response, next) => {
+    const { article_id } = request.params
+    const { inc_votes } = request.body
+    if (typeof inc_votes !== 'number') {
+        return next({ status: 400, msg: 'Invalid vote data type'})
+    }
+    checkArticleExists(article_id)
+        .then(() => patchingArticlesById(article_id, inc_votes))
+        .then((updatedArticle) => {
+            response.status(202).send({ article: updatedArticle })
+        })
+        .catch(next);
+}
+
 module.exports = {
   getTopics,
   getArticles,
   getUsers,
   getArticlesById,
   getCommentsByArticleId,
-  postCommentByArticleId,
+    postCommentByArticleId,
+  patchArticlesByArticleId
 };

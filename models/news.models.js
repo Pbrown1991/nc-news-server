@@ -58,4 +58,16 @@ const postingCommentByArticleId = (article_id, username, body) => {
     })
     
 }
-module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId}
+
+const patchingArticlesById = (article_id, inc_votes) => {
+    return db.query(`UPDATE articles SET votes = votes +$1 WHERE article_id = $2 RETURNING *`, [inc_votes, article_id])
+        .then(({ rows }) => {
+            return rows[0]
+            
+    })
+}
+
+
+
+
+module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId,patchingArticlesById}

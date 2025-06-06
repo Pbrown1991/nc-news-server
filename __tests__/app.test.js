@@ -96,7 +96,7 @@ describe("GET = /api/articles/:article_id", () => {
           created_at,
           votes,
           article_img_url,
-        } = body.article; // naming conflict - rename body
+        } = body.article; 
         expect(typeof author).toBe("string");
         expect(typeof title).toBe("string");
         expect(typeof article_id).toBe("number");
@@ -197,26 +197,77 @@ describe("POST = /api/articles/:article_id/comments", () => {
   });
   test('POST - 400 - Responds with "Bad request" when fed an invalid or incomplete set of data ', () => {
     return request(app)
-      .post('/api/articles/1/comments')
+      .post("/api/articles/1/comments")
       .send({
-        username: 'Ricketycricket',
+        username: "Ricketycricket",
       })
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe('Bad request: username & body must be present and be strings')
-      })
-  })
+        expect(body.msg).toBe(
+          "Bad request: username & body must be present and be strings"
+        );
+      });
+  });
   test('POST - 404 - Responds with "Article ID not found" when presented with an invalid article ID number', () => {
     return request(app)
-      .post('/api/articles/27/comments')
+      .post("/api/articles/27/comments")
       .send({
-        username: 'Ricketycricket',
-      body: "Rise up! Gonna get higher and higher"
+        username: "Ricketycricket",
+        body: "Rise up! Gonna get higher and higher",
       })
       .expect(404)
       .then(({ body }) => {
-      expect(body.msg).toBe('Article ID 27 not found')
-    })
-  })
-  })
+        expect(body.msg).toBe("Article ID 27 not found");
+      });
+  });
+});
 
+describe('PATCH = /api/articles/:article_id', () => {
+  test('PATCH - 202 - Responds with the specified updated article object with an updated votes property', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: 5 })
+      .expect(202)
+      .then(({ body }) => {
+        const {
+          author,
+          title,
+          article_id,
+          body: article_body,
+          topic,
+          created_at,
+          votes,
+          article_img_url,
+        } = body.article;
+        expect(typeof author).toBe("string");
+        expect(typeof title).toBe("string");
+        expect(typeof article_id).toBe("number");
+        expect(typeof article_body).toBe("string");
+        expect(typeof topic).toBe("string");
+        expect(typeof created_at).toBe("string");
+        expect(typeof votes).toBe("number");
+        expect(typeof article_img_url).toBe("string");
+        expect(article_id).toBe(1);
+        expect(votes).toBe(105)
+      })
+    
+  })
+  test('PATCH - 404 - Responds with 404 error when article_id is not found', () => {
+    return request(app)
+      .patch('/api/articles/27')
+      .send({ inc_votes: 5 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Article ID 27 not found')
+      })
+  })
+  test('PATCH - 400 - Responds with 400 error message when inc_votes is passed an invalid data type', () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({ inc_votes: 'potato' })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid vote data type')
+      })
+  })
+})
