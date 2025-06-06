@@ -1,9 +1,9 @@
 const endpointsJson = require("../endpoints.json");
-const request = require('supertest')
-const app = require('../app.js')
-const data = require('../db/data/test-data')
-const db = require('../db/connection')
-const seed = require('../db/seeds/seed')
+const request = require("supertest");
+const app = require("../app.js");
+const data = require("../db/data/test-data");
+const db = require("../db/connection");
+const seed = require("../db/seeds/seed");
 
 beforeEach(() => {
   return seed(data);
@@ -31,155 +31,192 @@ describe("GET /api/topics", () => {
       .expect(200)
       .then(({ body }) => {
         //const topic = body.topics[0]
-        const { topics } = body
-        expect(topics.length).not.toBe(0)
+        const { topics } = body;
+        expect(topics.length).not.toBe(0);
         topics.forEach((topic) => {
-          expect(typeof topic.slug).toBe('string')
-          expect(typeof topic.description).toBe('string')
-        })
-        
-    })
-  })
-})
+          expect(typeof topic.slug).toBe("string");
+          expect(typeof topic.description).toBe("string");
+        });
+      });
+  });
+});
 
-describe('GET = /api/articles', () => {
-  test('200: Responds with an object with the key of articles and the value of an array of article objects', () => {
+describe("GET = /api/articles", () => {
+  test("200: Responds with an object with the key of articles and the value of an array of article objects", () => {
     return request(app)
-      .get('/api/articles')
+      .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        const { articles } = body        
-        expect(articles.length).not.toBe(0)
+        const { articles } = body;
+        expect(articles.length).not.toBe(0);
         articles.forEach((article) => {
-          expect(typeof article.author).toBe('string')
-          expect(typeof article.title).toBe('string')
-          expect(typeof article.article_id).toBe('number')
-          expect(typeof article.topic).toBe('string')
-          expect(typeof article.created_at).toBe('string')
-          expect(typeof article.votes).toBe('number')
-          expect(typeof article.article_img_url).toBe('string')
-          expect(typeof article.comment_count).toBe('number')
-          expect(article).not.toHaveProperty('body')
-        })
-    })
-  })
-})
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.comment_count).toBe("number");
+          expect(article).not.toHaveProperty("body");
+        });
+      });
+  });
+});
 
-describe('GET = /api/users', () => {
-  test('GET - 200 - responds with an object with the key of users and the value of an array of objects.', () => {
+describe("GET = /api/users", () => {
+  test("GET - 200 - responds with an object with the key of users and the value of an array of objects.", () => {
     return request(app)
-    .get('/api/users')
-    .expect(200)
-    .then(({ body }) => {
-      const { users } = body
-      expect(users.length).not.toBe(0)
-      users.forEach((user) => {
-        expect(typeof user.username).toBe('string')
-        expect(typeof user.name).toBe('string')
-        expect(typeof user.avatar_url).toBe('string')
-      })
-  })
-  
-  })
-
-})
-
-describe('GET = /api/articles/:article_id', () => {
-  test('GET - 200 - responds with an object with the key of article and the value of an article object', () => {
-    return request(app)
-      .get('/api/articles/1')
+      .get("/api/users")
       .expect(200)
       .then(({ body }) => {
-        const { author, title, article_id, body: article_body, topic, created_at, votes, article_img_url } = body.article // naming conflict - rename body
-        expect(typeof author).toBe('string')
-        expect(typeof title).toBe('string')
-        expect(typeof article_id).toBe('number')
-        expect(typeof article_body).toBe('string')
-        expect(typeof topic).toBe('string')
-        expect(typeof created_at).toBe('string')
-        expect(typeof votes).toBe('number')
-        expect(typeof article_img_url).toBe('string')
-        expect(article_id).toBe(1)
-    })
-  })
-  test('GET - 404 - Responds with error message for an article_id that is not present', () => {
+        const { users } = body;
+        expect(users.length).not.toBe(0);
+        users.forEach((user) => {
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+      });
+  });
+});
+
+describe("GET = /api/articles/:article_id", () => {
+  test("GET - 200 - responds with an object with the key of article and the value of an article object", () => {
     return request(app)
-      .get('/api/articles/505')
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const {
+          author,
+          title,
+          article_id,
+          body: article_body,
+          topic,
+          created_at,
+          votes,
+          article_img_url,
+        } = body.article; // naming conflict - rename body
+        expect(typeof author).toBe("string");
+        expect(typeof title).toBe("string");
+        expect(typeof article_id).toBe("number");
+        expect(typeof article_body).toBe("string");
+        expect(typeof topic).toBe("string");
+        expect(typeof created_at).toBe("string");
+        expect(typeof votes).toBe("number");
+        expect(typeof article_img_url).toBe("string");
+        expect(article_id).toBe(1);
+      });
+  });
+  test("GET - 404 - Responds with error message for an article_id that is not present", () => {
+    return request(app)
+      .get("/api/articles/505")
       .expect(404)
       .then(({ body }) => {
-      expect(body.msg).toBe('Article not found')
-    })
-  })
-  test('GET - 400 - Responds with error message for an article_id input that is invalid', () => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+  test("GET - 400 - Responds with error message for an article_id input that is invalid", () => {
     return request(app)
-      .get('/api/articles/potato')
+      .get("/api/articles/potato")
       .expect(400)
       .then(({ body }) => {
-      expect(body.msg).toBe('Invalid input')
-    })
-  })
-})
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+});
 
-describe('GET = /api/articles/:article_id/comments', () => {
+describe("GET = /api/articles/:article_id/comments", () => {
   test('GET - 200 - Responds with an object with the key of "comments" and the value of an array of comments for the given article_id', () => {
     return request(app)
-      .get('/api/articles/1/comments')
+      .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        const { comments } = body
-        expect(comments.length).not.toBe(0)
+        const { comments } = body;
+        expect(comments.length).not.toBe(0);
         comments.forEach((comment) => {
-          expect(typeof comment.comment_id).toBe('number')
-          expect(typeof comment.votes).toBe('number')
-          expect(typeof comment.created_at).toBe('string')
-          expect(typeof comment.author).toBe('string')
-          expect(typeof comment.body).toBe('string')
-          expect(typeof comment.article_id).toBe('number')
-          expect(comment.article_id).toBe(1)
-        })
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.article_id).toBe("number");
+          expect(comment.article_id).toBe(1);
+        });
         for (let i = 0; i < comments.length - 1; i++) {
           const current = new Date(comments[i].created_at);
           const next = new Date(comments[i + 1].created_at);
-          expect(current>=next).toBe(true)
-    
+          expect(current >= next).toBe(true);
         }
-    })
-  })
-  test('GET - 404 - Responds with error message for an article_id that is not present', () => {
+      });
+  });
+  test("GET - 404 - Responds with error message for an article_id that is not present", () => {
     return request(app)
-      .get('/api/articles/505/comments')
+      .get("/api/articles/505/comments")
       .expect(404)
       .then(({ body }) => {
-      expect(body.msg).toBe('Article not found')
-    })
-  })
-  test('GET - 400 - Responds with correct error message for an article_id input that is invalid', () => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+  test("GET - 400 - Responds with correct error message for an article_id input that is invalid", () => {
     return request(app)
-      .get('/api/articles/potato/comments')
+      .get("/api/articles/potato/comments")
       .expect(400)
       .then(({ body }) => {
-      expect(body.msg).toBe('Invalid input')
-    })
-  })
-})
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+});
 
-describe('POST = /api/articles/:article_id/comments', () => {
-  test('POST - 201 - Responds with the posted comment and has updated the comments table', () => {
+describe("POST = /api/articles/:article_id/comments", () => {
+  test("POST - 201 - Responds with the posted comment and has updated the comments table", () => {
     return request(app)
-      .post('/api/articles/1/comments')
-      .send({ username: 'Ricketycricket', body: 'Rise up! Gonna get higher and higher'})
+      .post("/api/articles/1/comments")
+      .send({
+        username: "Ricketycricket",
+        body: "Rise up! Gonna get higher and higher",
+      })
       .expect(201)
       .then(({ body }) => {
-        const { article_id, comment_id, article_title, body: comment_body, votes, author, created_at } = body.comment
-        expect(typeof article_id).toBe('number')
-        expect(typeof comment_id).toBe('number')
-        expect(typeof comment_body).toBe('string')
-        expect(typeof votes).toBe('number')
-        expect(typeof author).toBe('string')
-        expect(typeof created_at).toBe('string')
-        expect(article_id).toBe(1)
-      
-    })
-    
+        const {
+          article_id,
+          comment_id,
+          body: comment_body,
+          votes,
+          author,
+          created_at,
+        } = body.comment;
+        expect(typeof article_id).toBe("number");
+        expect(typeof comment_id).toBe("number");
+        expect(typeof comment_body).toBe("string");
+        expect(typeof votes).toBe("number");
+        expect(typeof author).toBe("string");
+        expect(typeof created_at).toBe("string");
+        expect(article_id).toBe(1);
+      });
+  });
+  test('POST - 400 - Responds with "Bad request" when fed an invalid or incomplete set of data ', () => {
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send({
+        username: 'Ricketycricket',
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Bad request: username & body must be present and be strings')
+      })
   })
-})
+  test('POST - 404 - Responds with "Article ID not found" when presented with an invalid article ID number', () => {
+    return request(app)
+      .post('/api/articles/27/comments')
+      .send({
+        username: 'Ricketycricket',
+      body: "Rise up! Gonna get higher and higher"
+      })
+      .expect(404)
+      .then(({ body }) => {
+      expect(body.msg).toBe('Article ID 27 not found')
+    })
+  })
+  })
+

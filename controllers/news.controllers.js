@@ -6,7 +6,7 @@ const {
   fetchCommentsByArticleId,
   postingCommentByArticleId,
 } = require("../models/news.models");
-const { userExists } = require("../utils.js");
+const { checkUserExists, checkArticleExists } = require("../utils.js");
 
 const getTopics = (request, response) => {
   fetchTopics().then((topics) => {
@@ -53,13 +53,24 @@ const getCommentsByArticleId = (request, response, next) => {
 const postCommentByArticleId = (request, response, next) => {
   const { article_id } = request.params;
   const { username, body } = request.body;
-  userExists(username)
+
+  if (
+    !username ||
+    typeof username !== "string" ||
+    !body ||
+    typeof body !== "string" ||
+    body.trim() == ""
+  ) {
+    return next({
+      status: 400,
+      msg: "Bad request: username & body must be present and be strings",
+    });
+  }
+  checkArticleExists(article_id)
+    .then(() => checkUserExists(username))
     .then(() => postingCommentByArticleId(article_id, username, body))
     .then((comment) => {
-      if (comment.length === 0) {
-        return next({ status: 400, msg: "Comment not posted" });
-      }
-      response.status(201).send({ comment : comment[0] });
+      response.status(201).send({ comment: comment[0] });
     })
     .catch(next);
 };
