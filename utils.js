@@ -30,4 +30,5 @@ const checkArticleExists = (article_id) => {
             return;
     })
 }
+
 module.exports = { checkUserExists,checkArticleExists };

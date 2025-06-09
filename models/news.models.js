@@ -76,8 +76,32 @@ const deletingCommentsByCommentId = (comment_id) => {
     })
     
 }
+const validColumns = ['author', 'title', 'created_at', 'article_id', 'votes']
+const validOrders = ['ASC', 'DESC']
+const sortingArticlesQuery = (column, order) => {
+    if (!validColumns.includes(column)) column = 'created_at';
+    if (!order) order = 'DESC'
+    else if (!validOrders.includes(order.toUpperCase())) order = 'DESC'
+    else order = order.toUpperCase()
+    return db.query(`
+    SELECT 
+      articles.author, articles.title, articles.article_id, articles.topic,
+      articles.created_at, articles.votes, articles.article_img_url,
+      COUNT(comments.comment_id)::INT AS comment_count
+    FROM articles
+    LEFT JOIN comments ON comments.article_id = articles.article_id
+    GROUP BY articles.article_id
+    ORDER BY ${column === 'author' || column === 'title' ? `LOWER(articles.${column})` : `articles.${column}`} ${order};
+  `).then(({ rows }) => {
+            return rows
+        })
+        .catch(err => {
+            console.error('not working:', err);
+            throw err
+    })
+}
 
 
 
 
-module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId,patchingArticlesById,deletingCommentsByCommentId}
+module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId,patchingArticlesById,deletingCommentsByCommentId, sortingArticlesQuery}

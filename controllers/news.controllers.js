@@ -7,7 +7,8 @@ const {
   fetchCommentsByArticleId,
     postingCommentByArticleId,
     patchingArticlesById,
-  deletingCommentsByCommentId
+  deletingCommentsByCommentId,
+  sortingArticlesQuery
 } = require("../models/news.models");
 const { checkUserExists, checkArticleExists } = require("../utils.js");
 
@@ -104,6 +105,26 @@ const deleteCommentsByCommentId = (request, response, next) => {
         })
     .catch(next)
 }
+const validColumns = ['author', 'title', 'created_at', 'article_id', 'votes']
+const validOrders = ['ASC', 'DESC']
+const sortArticlesQuery = (request, response, next) => {
+  let { sort_by: column = 'created_at', order = 'DESC' } = request.query
+  if (column && !validColumns.includes(column)) {
+    return next({status:400, msg:'Invalid sort_by column'})
+  }
+  order = order.toUpperCase();
+  if (order && !validOrders.includes(order)) {
+    return next ({status:400, msg: 'Invalid order value'})
+  }
+  sortingArticlesQuery(column, order)
+    .then((rows) => {
+    response.status(200).send({articles:rows})
+    }) 
+    .catch((err) => {
+    next(err)
+  })
+
+}
 
 module.exports = {
   getTopics,
@@ -113,5 +134,6 @@ module.exports = {
   getCommentsByArticleId,
     postCommentByArticleId,
     patchArticlesByArticleId,
-  deleteCommentsByCommentId
+  deleteCommentsByCommentId,
+  sortArticlesQuery
 };
