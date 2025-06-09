@@ -8,7 +8,8 @@ const {
     postingCommentByArticleId,
     patchingArticlesById,
   deletingCommentsByCommentId,
-  sortingArticlesQuery
+  sortingArticlesQuery, 
+  sortingTopicsQuery
 } = require("../models/news.models");
 const { checkUserExists, checkArticleExists } = require("../utils.js");
 
@@ -126,6 +127,10 @@ const sortArticlesQuery = (request, response, next) => {
 
 }
 
+const sortTopicsQuery = (request, response, next) => {
+  console.log(request.query)
+}
+
 module.exports = {
   getTopics,
   getArticles,
@@ -135,5 +140,6 @@ module.exports = {
     postCommentByArticleId,
     patchArticlesByArticleId,
   deleteCommentsByCommentId,
-  sortArticlesQuery
+  sortArticlesQuery, 
+  sortTopicsQuery
 };

@@ -91,7 +91,7 @@ const sortingArticlesQuery = (column, order) => {
     FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id
     GROUP BY articles.article_id
-    ORDER BY ${column === 'author' || column === 'title' ? `LOWER(articles.${column})` : `articles.${column}`} ${order};
+    ORDER BY ${column} ${order};
   `).then(({ rows }) => {
             return rows
         })
@@ -101,7 +101,11 @@ const sortingArticlesQuery = (column, order) => {
     })
 }
 
+const sortingTopicsQuery = (topic) => {
+    
+}
 
 
 
-module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId,patchingArticlesById,deletingCommentsByCommentId, sortingArticlesQuery}
+
+module.exports = {fetchTopics, fetchArticles, fetchUsers, fetchArticlesById, fetchCommentsByArticleId, postingCommentByArticleId,patchingArticlesById,deletingCommentsByCommentId, sortingArticlesQuery, sortingTopicsQuery}

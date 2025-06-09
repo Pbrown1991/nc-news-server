@@ -327,3 +327,26 @@ describe('GET = /api/articles - SORT', () => {
 
 });
 
+describe.skip('GET - 200 - /api/articles (topic query)', () => {
+  test('GET - 200 - Serves articles filtered by the topic value specified in the query, will default to all articles if query is omitted', () => {
+    return request(app)
+      .get('/api/articles?topic=cats')
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body
+        expect(articles.length).not.toBe(0)
+        articles.forEach((article) => {
+        expect(typeof article.author).toBe("string");
+        expect(typeof article.title).toBe("string");
+        expect(typeof article.article_id).toBe("number");
+        expect(typeof article_body).toBe("string");
+        expect(typeof article.topic).toBe("string");
+        expect(typeof article.created_at).toBe("string");
+        expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+          expect(article.topic).toEqual('mitch')
+      })
+    })
+  })
+})
+

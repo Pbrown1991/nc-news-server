@@ -3,10 +3,12 @@ const app = express();
 const db = require('./db/connection')
 const endpointsJson = require('./endpoints.json')
 app.use(express.json());
-const {getTopics, getArticles,getUsers, getArticlesById, getCommentsByArticleId,postCommentByArticleId, patchArticlesByArticleId, deleteCommentsByCommentId,sortArticlesQuery} = require('./controllers/news.controllers')
+const {getTopics, getArticles,getUsers, getArticlesById, getCommentsByArticleId,postCommentByArticleId, patchArticlesByArticleId, deleteCommentsByCommentId,sortArticlesQuery, sortTopicsQuery} = require('./controllers/news.controllers')
 
 
 app.get('/api/articles', sortArticlesQuery);
+
+app.get('/api/articles', sortTopicsQuery);
 
 app.get('/api', (request, response) => {
     response.status(200).send({ endpoints: endpointsJson })
