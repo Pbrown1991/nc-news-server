@@ -8,7 +8,7 @@ const {getTopics, getArticles,getUsers, getArticlesById, getCommentsByArticleId,
 
 app.get('/api/articles', sortArticlesQuery);
 
-app.get('/api/articles', sortTopicsQuery);
+//app.get('/api/articles', sortTopicsQuery); WIP
 
 app.get('/api', (request, response) => {
     response.status(200).send({ endpoints: endpointsJson })

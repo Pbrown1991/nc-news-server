@@ -129,7 +129,7 @@ const sortArticlesQuery = (request, response, next) => {
 
 const sortTopicsQuery = (request, response, next) => {
   console.log(request.query)
-}
+} // WIP
 
 module.exports = {
   getTopics,

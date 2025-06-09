@@ -103,7 +103,7 @@ const sortingArticlesQuery = (column, order) => {
 
 const sortingTopicsQuery = (topic) => {
     
-}
+} // WIP
 
 
 
