@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northcoders News Server</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ <header><h1>Northcoders News</h1></header> 
+   
+ <header>
+    <section class="navigation-links">
+      <h2>Endpoint Navigation</h2>
+      <H3>GET</H3>  
+    <a href="/api"><button class = "button">GET - List of All Available Endpoints</button></a>
+    <a href="/api/topics"><button class = "button">GET - Topics</button></a>
+    <a href="/api/articles"><button class = "button">GET - Articles</button></a>
+    <a href="/api/users"><button class = "button">GET - Users</button></a>
+    <a href="/api/articles/:article_id"><button class = "button">GET - Articles by Article ID</button></a>
+    <a href="/api/articles/:article_id/comments"><button class = "button">GET - Comments by Article ID</button></a>
+    <a href="/api/articles"><button class = "button">GET - Sort Articles</button></a>
+    <H3>POST</H3>
+    <a href="/api/articles/:article_id/comments"><button class = "button">POST - Comment by Article ID</button></a>
+    <h3>PATCH</h3>
+    <a href="/api/articles/:article_id"><button class = "button">PATCH - Article by Article ID</button></a>
+    <h3>DELETE</h3>
+    <a href="/api/comments/:comment_id"><button class = "button">DELETE - Comment by Comment ID</button></a>
+    </section>
+ </header>
+ <main>
+
+
+ </main>
+</body>
+</html>

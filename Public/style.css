@@ -1,0 +1,45 @@
+h1{
+    color: rgb(250, 1, 1); background-color: rgb(238, 238, 247);
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+h2{
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+h3{
+    color: aliceblue;
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.navigation-links{
+    background-color: rgb(177, 177, 177);
+    text-align: left;
+    p{
+        color: darkred;
+    }
+    
+}
+a{color: darkred}
+
+
+.button{
+    font-family: "Lucida Console", "Courier New", monospace;
+    margin:auto;
+    background-color: rgb(187, 17, 51);
+    border: white;
+    color: antiquewhite;
+    padding: 14px, 40px;
+    text-align: center;
+    text-decoration-thickness: 1;
+    display: block;
+    font-size: 20px;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);}
+
+    .button:hover {
+  background-color: #fad4cd; 
+  color: white;}
