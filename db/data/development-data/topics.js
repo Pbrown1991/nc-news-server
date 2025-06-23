@@ -1,5 +1,5 @@
 module.exports = [
-  { description: "Code is love, code is life", slug: "coding", img_url: "" },
+  { description: "Live, laugh, code", slug: "coding", img_url: "" },
   {
     description: "FOOTIE!",
     slug: "football",

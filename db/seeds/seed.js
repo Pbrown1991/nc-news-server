@@ -71,6 +71,12 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       );
       return db.query(insertCommentsData)
     })
+    .then(() => {
+      console.log('Seeding executed')
+    })
+    .catch((err) => {
+    console.log(err)
+  })
       }
     
   
