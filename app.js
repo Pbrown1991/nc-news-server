@@ -5,12 +5,8 @@ const endpointsJson = require('./endpoints.json')
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
-const {getTopics, getArticles,getUsers, getArticlesById, getCommentsByArticleId,postCommentByArticleId, patchArticlesByArticleId, deleteCommentsByCommentId,sortArticlesQuery, sortTopicsQuery} = require('./controllers/news.controllers')
+const { getTopics, getArticles, getUsers, getArticlesById, getCommentsByArticleId, postCommentByArticleId, patchArticlesByArticleId, deleteCommentsByCommentId, sortArticlesQuery, sortTopicsQuery } = require('./controllers/news.controllers')
 
-
-app.get('/api/articles', sortArticlesQuery);
-
-//app.get('/api/articles', sortTopicsQuery); WIP
 
 app.get('/api', (request, response) => {
     response.status(200).send({ endpoints: endpointsJson })
@@ -37,8 +33,8 @@ app.delete('/api/comments/:comment_id', deleteCommentsByCommentId)
 
 app.use((err, req, res, next) => {
     if (err.code === "22P02") {
-        return res.status(400).send({msg: "Invalid input"})
-    } else next (err)
+        return res.status(400).send({ msg: "Invalid input" })
+    } else next(err)
 })
 
 
@@ -52,7 +48,7 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.log(err);
-    return res.status(500).send({msg: "Internal Server Error"})
+    return res.status(500).send({ msg: "Internal Server Error" })
 })
 
 

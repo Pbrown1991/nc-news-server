@@ -5,10 +5,10 @@ const {
   fetchUsers,
   fetchArticlesById,
   fetchCommentsByArticleId,
-    postingCommentByArticleId,
-    patchingArticlesById,
+  postingCommentByArticleId,
+  patchingArticlesById,
   deletingCommentsByCommentId,
-  sortingArticlesQuery, 
+  sortingArticlesQuery,
   sortingTopicsQuery
 } = require("../models/news.models");
 const { checkUserExists, checkArticleExists } = require("../utils.js");
@@ -19,10 +19,12 @@ const getTopics = (request, response) => {
   });
 };
 
-const getArticles = (request, response) => {
-  fetchArticles().then((articles) => {
+const getArticles = (request, response, next) => {
+  const { topic, sort_by, order } = request.query
+  fetchArticles(topic, sort_by, order).then((articles) => {
     response.status(200).send({ articles });
-  });
+  })
+    .catch(next);
 };
 
 const getUsers = (request, response) => {
@@ -45,14 +47,24 @@ const getArticlesById = (request, response, next) => {
 
 const getCommentsByArticleId = (request, response, next) => {
   const { article_id } = request.params;
-  fetchCommentsByArticleId(article_id)
-    .then((comments) => {
-      if (comments.length === 0) {
-        return next({ status: 404, msg: "Article not found" });
-      }
-      response.status(200).send({ comments: comments });
+
+  if (isNaN(article_id)) {
+    return next({ status: 400, msg: "Invalid input" });
+  }
+
+
+  
+  checkArticleExists(article_id)
+    .then(() => {
+      return fetchCommentsByArticleId(article_id);
     })
-    .catch(next);
+    .then((comments) => {
+      response.status(200).send({ comments });
+    })
+    .catch((err) => {
+      
+      next(err)
+    });
 };
 
 const postCommentByArticleId = (request, response, next) => {
@@ -81,55 +93,33 @@ const postCommentByArticleId = (request, response, next) => {
 };
 
 const patchArticlesByArticleId = (request, response, next) => {
-    const { article_id } = request.params
-    const { inc_votes } = request.body
-    if (typeof inc_votes !== 'number') {
-        return next({ status: 400, msg: 'Invalid vote data type'})
-    }
-    checkArticleExists(article_id)
-        .then(() => patchingArticlesById(article_id, inc_votes))
-        .then((updatedArticle) => {
-            response.status(202).send({ article: updatedArticle })
-        })
-        .catch(next);
+  const { article_id } = request.params
+  const { inc_votes } = request.body
+  if (typeof inc_votes !== 'number') {
+    return next({ status: 400, msg: 'Invalid vote data type' })
+  }
+  checkArticleExists(article_id)
+    .then(() => patchingArticlesById(article_id, inc_votes))
+    .then((updatedArticle) => {
+      response.status(202).send({ article: updatedArticle })
+    })
+    .catch(next);
 }
 
 const deleteCommentsByCommentId = (request, response, next) => {
-    const { comment_id } = request.params
-    const numId = Number(comment_id)
-    if (!Number.isInteger(numId)) {
-        return Promise.reject({status:400, msg:'Invalid comment ID'})
-    }
-    deletingCommentsByCommentId(comment_id)
-        .then(() => {
-            response.status(204).send();
-        })
+  const { comment_id } = request.params
+  const numId = Number(comment_id)
+  if (!Number.isInteger(numId)) {
+    return Promise.reject({ status: 400, msg: 'Invalid comment ID' })
+  }
+  deletingCommentsByCommentId(comment_id)
+    .then(() => {
+      response.status(204).send();
+    })
     .catch(next)
 }
-const validColumns = ['author', 'title', 'created_at', 'article_id', 'votes']
-const validOrders = ['ASC', 'DESC']
-const sortArticlesQuery = (request, response, next) => {
-  let { sort_by: column = 'created_at', order = 'DESC' } = request.query
-  if (column && !validColumns.includes(column)) {
-    return next({status:400, msg:'Invalid sort_by column'})
-  }
-  order = order.toUpperCase();
-  if (order && !validOrders.includes(order)) {
-    return next ({status:400, msg: 'Invalid order value'})
-  }
-  sortingArticlesQuery(column, order)
-    .then((rows) => {
-    response.status(200).send({articles:rows})
-    }) 
-    .catch((err) => {
-    next(err)
-  })
 
-}
 
-const sortTopicsQuery = (request, response, next) => {
-  console.log(request.query)
-} // WIP
 
 module.exports = {
   getTopics,
@@ -137,9 +127,7 @@ module.exports = {
   getUsers,
   getArticlesById,
   getCommentsByArticleId,
-    postCommentByArticleId,
-    patchArticlesByArticleId,
-  deleteCommentsByCommentId,
-  sortArticlesQuery, 
-  sortTopicsQuery
+  postCommentByArticleId,
+  patchArticlesByArticleId,
+  deleteCommentsByCommentId
 };

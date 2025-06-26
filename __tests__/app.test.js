@@ -157,7 +157,7 @@ describe("GET = /api/articles/:article_id/comments", () => {
       .get("/api/articles/505/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Article not found");
+        expect(body.msg).toBe('Article ID 505 not found');
       });
   });
   test("GET - 400 - Responds with correct error message for an article_id input that is invalid", () => {
@@ -327,7 +327,7 @@ describe('GET = /api/articles - SORT', () => {
 
 });
 
-describe.skip('GET - 200 - /api/articles (topic query)', () => {
+describe('GET - 200 - /api/articles (topic query)', () => {
   test('GET - 200 - Serves articles filtered by the topic value specified in the query, will default to all articles if query is omitted', () => {
     return request(app)
       .get('/api/articles?topic=cats')
@@ -339,14 +339,18 @@ describe.skip('GET - 200 - /api/articles (topic query)', () => {
         expect(typeof article.author).toBe("string");
         expect(typeof article.title).toBe("string");
         expect(typeof article.article_id).toBe("number");
-        expect(typeof article_body).toBe("string");
         expect(typeof article.topic).toBe("string");
         expect(typeof article.created_at).toBe("string");
         expect(typeof article.votes).toBe("number");
-          expect(typeof article.article_img_url).toBe("string");
-          expect(article.topic).toEqual('mitch')
+        expect(typeof article.article_img_url).toBe("string");
+        expect(article.topic).toEqual('cats')
       })
     })
   })
-}) // WIP
+  test('GET /api/articles?topic=invalidtopic returns 404', () => {
+  return request(app)
+    .get('/api/articles?topic=invalidtopic')
+    .expect(404);
+});
+}) 
 
