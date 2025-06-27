@@ -9,7 +9,7 @@ const fetchTopics = () => {
 
 const fetchArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
 
-    const validColumns = ['author', 'title', 'created_at', 'article_id', 'votes']
+    const validColumns = ['author', 'title', 'created_at', 'article_id', 'votes', 'comment_count']
     const validOrders = ['ASC', 'DESC']
 
     sort_by = sort_by.toLowerCase();
@@ -36,16 +36,16 @@ const fetchArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
         FROM articles
         LEFT JOIN comments ON comments.article_id = articles.article_id
         `;
-    
-    
+
+
     const validateTopicQuery = topic
-    ? db.query(`SELECT * FROM topics WHERE slug = $1`, [topic])
-        .then(({ rows }) => {
-          if (rows.length === 0) {
-            return Promise.reject({ status: 404, msg: 'Topic not found' });
-          }
-        })
-    : Promise.resolve();
+        ? db.query(`SELECT * FROM topics WHERE slug = $1`, [topic])
+            .then(({ rows }) => {
+                if (rows.length === 0) {
+                    return Promise.reject({ status: 404, msg: 'Topic not found' });
+                }
+            })
+        : Promise.resolve();
 
 
     if (topic) {
@@ -60,11 +60,11 @@ const fetchArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
 
     return validateTopicQuery.then(() => {
         return db.query(queryStr, queryValues)
-        .then(({ rows }) => {
-            return rows
-        })
+            .then(({ rows }) => {
+                return rows
+            })
     })
-    
+
 }
 
 const fetchUsers = () => {
@@ -82,7 +82,7 @@ const fetchArticlesById = (id) => {
 }
 
 const fetchCommentsByArticleId = (id) => {
-  return db.query(`
+    return db.query(`
     SELECT 
       comment_id,
       votes,
@@ -94,9 +94,9 @@ const fetchCommentsByArticleId = (id) => {
     WHERE article_id = $1
     ORDER BY created_at DESC;
   `, [id])
-  .then(({ rows }) => {
-    return rows;
-  });
+        .then(({ rows }) => {
+            return rows;
+        });
 };
 
 const postingCommentByArticleId = (article_id, username, body) => {
